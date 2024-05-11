@@ -16,10 +16,10 @@ from hashdf import HashableDataFrame
 
 headers = {"User-Agent": "mukunth1026@gmail.com"}
 
-memory=Memory('cachedir/',verbose=0)
+# memory=Memory('cachedir/',verbose=0)
 
-@lru_cache(maxsize=10000)
-@memory.cache
+# @lru_cache(maxsize=10000)
+# @memory.cache
 def load_data():
 
     # making a get request to the url
@@ -38,7 +38,7 @@ def load_data():
 
     # print(company_data.iloc[0:10,:]) ## to check the data
 
-    return HashableDataFrame(company_data)
+    # return company_data
 
 # used to get the cik value of the ticker
 """ the lru cache always misses on the caching, hence we are unable to do caching of the data here. 

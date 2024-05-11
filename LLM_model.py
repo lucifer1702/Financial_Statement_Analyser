@@ -8,12 +8,81 @@ we will now use this and the LLM model to get insights about CAGR ananlysis,Prof
 """
 
 from Edgar_data_prep.edgar_CIK import get_ticker_cik
-from Edgar_data_prep.edgar_CIK_ticker import metadata_10k_filings,facts_10k_filings
+from Edgar_data_prep.edgar_CIK_ticker import metadata_10k_filings, facts_10k_filings
 import pandas as pd
-from langchain.agents import create_pandas_dataframe_agent
-from langchain.llms import OpenAI
-import pandas as pd
-import os 
+from langchain_experimental.agents import create_pandas_dataframe_agent
+from langchain.indexes import VectorstoreIndexCreator
+from langchain.chains import retrieval_qa
+from langchain_openai import OpenAI
+from langchain_openai import OpenAIEmbeddings
 
-##API key
-api_key = os.environ.get('OPENAI_API_KEY')
+
+import pandas as pd
+import os
+from dotenv import load_dotenv
+load_dotenv()
+os.environ["OPENAI_API_KEY"]=os.getenv("OPENAI_KEY")
+
+index_creator = VectorstoreIndexCreator()
+
+# we will use this fuction to create the dataframe agent for all the databases combined
+""" Due TO TOKEN LIMITATIONS AND THE FACT THAT THE MODEL STARTS TO HALLUCINATE WHEN ALL THE 
+DATASETS ARE GIVEN AS A COMBINED DATASET, WE WILL USE THE DATASETS INDIVIDUALLY TO GET THE RESULTS"""
+# ISSUE 2 MAJOR SOLVING REQUIRED IN THE FUTURE
+
+#
+
+
+def llm_analysis_metadata(ticker):
+    df_metadata = metadata_10k_filings(ticker)
+    agent = create_pandas_dataframe_agent(
+        OpenAI(temperature=0.1), [df_metadata], verbose=True)
+    query = "summarize the metadata of the 10-k fillings and give insights about the company"
+    response = agent(query)
+    return response
+
+
+def llm_analysis_shares(ticker):
+    df_shares, _, _, _, _, _ = facts_10k_filings(ticker)
+    agent = create_pandas_dataframe_agent(
+        OpenAI(temperature=0.1), [df_shares], verbose=True)
+    query1 = "summarize the volatilty of shares of the company"
+    response1 = agent(query1)
+    query2 = "What is the CAGR of the company"
+    response2 = agent(query2)
+    return response1, response2
+
+
+def llm_analysis_assets(ticker):
+    df_shares, _, _, _, _, _ = facts_10k_filings(ticker)
+    agent = create_pandas_dataframe_agent(
+        OpenAI(temperature=0.1), [df_shares], verbose=True)
+    query1 = "how much is the company's assests"
+    response1 = agent(query1)
+    query2 = "is the company profitable"
+    response2 = agent(query2)
+    return response1, response2
+
+
+def llm_analysis_liablities(ticker):
+    _, df_liablities, _, _, _, _ = facts_10k_filings(ticker)
+    agent = create_pandas_dataframe_agent(
+        OpenAI(temperature=0.1), [df_liablities], verbose=True)
+    query1 = "how much is the company's liablities"
+    response1 = agent(query1)
+    query2 = "is the company going on a loss"
+    response2 = agent(query2)
+    return response1, response2
+
+#
+
+
+def llm_analysis_revenue(ticker):
+    _, df_liablities, _, _, _, _ = facts_10k_filings(ticker)
+    agent = create_pandas_dataframe_agent(
+        OpenAI(temperature=0.1), [df_liablities], verbose=True)
+    query1 = "how much is the company's revenues"
+    response1 = agent(query1)
+    query2 = "what is the rate at which the revenues have grown"
+    response2 = agent(query2)
+    return response1, response2
