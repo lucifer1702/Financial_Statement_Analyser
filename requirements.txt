@@ -3,5 +3,6 @@ litellm
 streamlit 
 requests
 pandas 
-litellm[proxy]
+
+
 
