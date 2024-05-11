@@ -4,13 +4,22 @@ the steps are as follows
 1. load_data function is used to get the data from the edgar-sec website, this has all the cik values for all the tickers
 2. the get_ticker_cik function is used to get the cik value of the ticker provided"""
 
+"""
+We try to do Caching of the data using joblib library and we use sha256 hashing to hash the dataframe and then use it in lru cache"
+"""
 
+from joblib import Memory
+from functools import lru_cache 
 import requests
 import pandas as pd
+from hashdf import HashableDataFrame
 
 headers = {"User-Agent": "mukunth1026@gmail.com"}
 
+memory=Memory('cachedir/',verbose=0)
 
+@lru_cache(maxsize=10000)
+@memory.cache
 def load_data():
 
     # making a get request to the url
@@ -29,13 +38,20 @@ def load_data():
 
     # print(company_data.iloc[0:10,:]) ## to check the data
 
-    return company_data
+    return HashableDataFrame(company_data)
 
 # used to get the cik value of the ticker
+""" the lru cache always misses on the caching, hence we are unable to do caching of the data here. 
+Issue #1 to work on in the future
+"""
+
 def get_ticker_cik(ticker):
 
     # we call the load_data function to get the data
-    df = load_data()
-    # we will get the CIK corresponding to the ticker
-    cik = df[df['ticker'] == ticker]['cik_str'].values[0]
-    return cik
+     df = load_data()
+     # we will get the CIK corresponding to the ticker
+     cik = df[df['ticker'] == ticker]['cik_str'].values[0]
+     return cik
+    
+
+# print(get_ticker_cik("AAPL"))

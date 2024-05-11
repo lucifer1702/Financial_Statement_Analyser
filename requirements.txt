@@ -3,6 +3,9 @@ litellm
 streamlit 
 requests
 pandas 
+langchain
+chromadb
+joblib
 
 
 

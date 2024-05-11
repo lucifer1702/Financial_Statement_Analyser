@@ -6,7 +6,7 @@ we will then use this data to get some results in the llm module
 """
 import requests
 # importing the load_data function from the edgar_CIK.py file
-from edgar_CIK import get_ticker_cik
+from Financial_Statement_Analyser.Edgar_data_prep.edgar_CIK import get_ticker_cik
 import pandas as pd
 
 headers = {"User-Agent": "mukunth1026@gmail.com"}
@@ -14,7 +14,7 @@ headers = {"User-Agent": "mukunth1026@gmail.com"}
 # used to get the metadata for all the 10k fillings for the ticker
 
 
-def filling_10kmetadata(ticker):
+def metadata_10k_filings(ticker):
     # get the cik value of the ticker
     cik = get_ticker_cik(ticker)
     # making a get request to the url
@@ -31,7 +31,9 @@ def filling_10kmetadata(ticker):
 # this function is used to get the facts about the filling and we are going to retrieve facts about all the 10k fillings the firm has done
 
 # This is the major portion of the fillings where export facts about the filling
-def facts_abt_filling10k(ticker):
+
+
+def facts_10k_filings(ticker):
     # get the cik number of the ticker
     cik = get_ticker_cik(ticker)
     # making a get request to the url
@@ -67,6 +69,3 @@ def facts_abt_filling10k(ticker):
     facts_df_usgaap5_10k = facts_df_usgaap5[facts_df_usgaap5['form'] == '10-K']
 
     return facts_df_dei_10k, facts_df_usgaap1_10k, facts_df_usgaap2_10k, facts_df_usgaap3_10k, facts_df_usgaap4_10k, facts_df_usgaap5_10k
-
-
-
