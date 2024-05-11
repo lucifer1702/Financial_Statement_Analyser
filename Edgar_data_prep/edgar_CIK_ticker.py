@@ -6,10 +6,10 @@ we will then use this data to get some results in the llm module
 """
 import requests
 # importing the load_data function from the edgar_CIK.py file
-from Financial_Statement_Analyser.Edgar_data_prep.edgar_CIK import get_ticker_cik
+from Edgar_data_prep.edgar_CIK import get_ticker_cik
 import pandas as pd
 
-headers = {"User-Agent": "mukunth1026@gmail.com"}
+headers = {"User-Agent": "mukunth1702@kgpian.iitkgp.ac.in"}
 
 # used to get the metadata for all the 10k fillings for the ticker
 

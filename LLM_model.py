@@ -86,3 +86,5 @@ def llm_analysis_revenue(ticker):
     query2 = "what is the rate at which the revenues have grown"
     response2 = agent(query2)
     return response1, response2
+
+print (llm_analysis_revenue("NVDA"))

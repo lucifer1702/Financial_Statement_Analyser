@@ -12,9 +12,9 @@ from joblib import Memory
 from functools import lru_cache 
 import requests
 import pandas as pd
-from hashdf import HashableDataFrame
+# from hashdf import HashableDataFrame
 
-headers = {"User-Agent": "mukunth1026@gmail.com"}
+headers = {"User-Agent": "mukunth1702@kgpian.iitkgp.ac.in"}
 
 # memory=Memory('cachedir/',verbose=0)
 
@@ -38,7 +38,7 @@ def load_data():
 
     # print(company_data.iloc[0:10,:]) ## to check the data
 
-    # return company_data
+    return company_data
 
 # used to get the cik value of the ticker
 """ the lru cache always misses on the caching, hence we are unable to do caching of the data here. 
